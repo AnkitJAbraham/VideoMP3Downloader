@@ -1,103 +1,94 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function HomePage() {
+  const [url, setUrl] = useState("");
+  const [valid, setValid] = useState(false);
+  const [info, setInfo] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!url.includes("youtube.com") && !url.includes("youtu.be")) return;
+    setLoading(true);
+    const res = await fetch(`/api/fetch-info?url=${encodeURIComponent(url)}`);
+    const data = await res.json();
+    setInfo(data);
+    setValid(true);
+    setLoading(false);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main
+      className="flex h-screen overflow-hidden font-sans transition-all duration-500"
+      style={{ fontFamily: "Montserrat, sans-serif" }}
+    >
+      {/* Left panel */}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div
+        className={`flex gap-12 flex-col justify-center items-center w-full md:w-1/2 p-10 bg-gray-100 transition-transform duration-500 ${
+          valid ? "-translate-x-full md:translate-x-0" : ""
+        }`}
+      >
+        <div className="text-center text-4xl font-heading">
+          Download YouTube Videos, Amma
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div className="text-center text-xl  font-sans ">
+          Copy YouTube video link (long press or right click on video, then
+          "Copy Link") and paste below
+        </div>
+        <input
+          type="text"
+          placeholder="Paste YouTube URL"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          className="w-full max-w-md p-3 border rounded mb-4"
+        />
+        <button
+          onClick={handleSubmit}
+          disabled={!url}
+          className="font-bold bg-gradient-to-r from-teal-300 to-sky-800 block text-white px-6 py-2 rounded hover:bg-blue-700 transition"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          {loading ? "Loading..." : "Get Download Link ->"}
+        </button>
+      </div>
+
+      {/* Right panel */}
+      <div
+        className={`flex flex-col gap-10 justify-center items-center w-full md:w-3/4 p-10 bg-white text-center transition-transform duration-500 ${
+          valid ? "translate-x-0" : "translate-x-full md:translate-x-0"
+        }`}
+      >
+        {info && (
+          <>
+            {info && (
+  <h2 className="text-xl font-heading mb-4">Title - <span className="font-sans font-semibold">{info.title}</span></h2>
+)}
+
+            {info.duration && (
+              <p className="text-gray-600 mb-2 font-medium">
+                Duration: {Math.floor(info.duration / 60)}:
+                {Math.floor(info.duration % 60)
+                  .toString()
+                  .padStart(2, "0")}
+              </p>
+            )}
+            <img
+              src={info.thumbnail}
+              alt="thumbnail"
+              className="w-64 rounded shadow mb-6"
+            />
+            <form method="GET" action="/api/download">
+              <input type="hidden" name="url" value={url} />
+              <button
+                type="submit"
+                className="block font-bold bg-gradient-to-r from-teal-300 to-sky-800 text-white px-6 py-3 rounded hover:bg-green-700 transition"
+              >
+                Download Now
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </main>
   );
 }
