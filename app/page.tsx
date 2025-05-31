@@ -1,14 +1,25 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Image from "next/image";
+
+type VideoInfo = {
+  title?: string;
+  thumbnail?: string;
+  duration?: number;
+  [key: string]: any;
+};
 
 export default function HomePage() {
   const [url, setUrl] = useState("");
   const [valid, setValid] = useState(false);
-  const [info, setInfo] = useState<any>(null);
+  const [info, setInfo] = useState<VideoInfo | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const isValidYouTubeUrl = (link: string) =>
+    /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/.test(link);
+
   const handleSubmit = async () => {
-    if (!url.includes("youtube.com") && !url.includes("youtu.be")) return;
+    if (!isValidYouTubeUrl(url)) return;
     setLoading(true);
     const res = await fetch(`/api/fetch-info?url=${encodeURIComponent(url)}`);
     const data = await res.json();
@@ -18,24 +29,24 @@ export default function HomePage() {
   };
 
   return (
-    <main
-      className="flex h-screen overflow-hidden font-sans transition-all duration-500"
-      style={{ fontFamily: "Montserrat, sans-serif" }}
-    >
-      {/* Left panel */}
-
+    <main className="relative lg:flex lg:h-screen w-full font-sans overflow-hidden">
+      {/* Left Panel */}
       <div
-        className={`flex gap-12 flex-col justify-center items-center w-full md:w-1/2 p-10 bg-gray-100 transition-transform duration-500 ${
-          valid ? "-translate-x-full md:translate-x-0" : ""
-        }`}
+        className={`
+          fixed top-0 left-0 w-full h-full bg-gray-100 z-30 transition-transform duration-700
+          flex flex-col justify-center items-center gap-10 p-8
+          ${valid ? "-translate-x-full" : "translate-x-0"}
+          lg:static lg:translate-x-0 lg:w-1/2 lg:h-full lg:z-auto
+        `}
       >
-        <div className="text-center text-4xl font-heading">
-          Download YouTube Videos, Amma
+        <div className="text-center text-4xl font-heading font-Adamina mb-6">
+          Download YouTube Videos, Amma         <span className="text-xs">by Unni</span>
         </div>
-        <div className="text-center text-xl  font-sans ">
+
+        <p className="text-center text-xl">
           Copy YouTube video link (long press or right click on video, then
-          "Copy Link") and paste below
-        </div>
+          &ldquo;Copy Link&rdquo;) and paste below
+        </p>
         <input
           type="text"
           placeholder="Paste YouTube URL"
@@ -44,25 +55,33 @@ export default function HomePage() {
           className="w-full max-w-md p-3 border rounded mb-4"
         />
         <button
+          type="button"
           onClick={handleSubmit}
-          disabled={!url}
-          className="font-bold bg-gradient-to-r from-teal-300 to-sky-800 block text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          disabled={!url || loading}
+          className="font-bold cursor-pointer bg-gradient-to-r from-teal-300 to-sky-800 text-white px-6 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Loading..." : "Get Download Link ->"}
         </button>
       </div>
 
-      {/* Right panel */}
+      {/* Right Panel */}
       <div
-        className={`flex flex-col gap-10 justify-center items-center w-full md:w-3/4 p-10 bg-white text-center transition-transform duration-500 ${
-          valid ? "translate-x-0" : "translate-x-full md:translate-x-0"
-        }`}
+        className={`
+          fixed top-0 left-0 w-full h-full bg-white z-20 transition-transform duration-700
+          flex flex-col justify-center items-center gap-8 p-8 text-center
+          ${valid ? "translate-x-0" : "translate-x-full"}
+          lg:static lg:translate-x-0 lg:w-2/3 lg:h-full lg:z-auto
+        `}
       >
         {info && (
           <>
-            {info && (
-  <h2 className="text-xl font-heading mb-4">Title - <span className="font-sans font-semibold">{info.title}</span></h2>
-)}
+            <h2
+              className="text-2xl font-heading mb-4"
+              style={{ fontFamily: "Adamina, serif" }}
+            >
+              Title -{" "}
+              <span className="font-sans font-semibold">{info.title}</span>
+            </h2>
 
             {info.duration && (
               <p className="text-gray-600 mb-2 font-medium">
@@ -72,11 +91,18 @@ export default function HomePage() {
                   .padStart(2, "0")}
               </p>
             )}
-            <img
-              src={info.thumbnail}
-              alt="thumbnail"
-              className="w-64 rounded shadow mb-6"
-            />
+
+            <div className="relative w-64 lg:w-84 h-36 lg:h-48 mb-6">
+              <Image
+                src={info.thumbnail || "/placeholder.png"}
+                alt="thumbnail"
+                fill
+                className="rounded shadow object-cover"
+                priority
+                sizes="256px"
+              />
+            </div>
+
             <form method="GET" action="/api/download">
               <input type="hidden" name="url" value={url} />
               <button

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 @import "tailwindcss";
 
 :root {
@@ -8,8 +10,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-montserrat); /* matches Tailwind */
-  --font-heading: var(--font-adamina); /* optional, not required if using classes */
+  --font-sans: var(--font-montserrat);
+  --font-heading: var(--font-adamina); 
 }
 
 @media (prefers-color-scheme: dark) {
