@@ -14,7 +14,7 @@ type VideoInfo = {
 export default function HomePage() {
   const [url, setUrl] = useState("");
   const [valid, setValid] = useState(false);
-  const [info, setInfo] = useState<VideoInfo | null>(null);
+  const [info, setInfo] = useState<VideoInfo>([]);
   const [loading, setLoading] = useState(false);
 
   const isValidYouTubeUrl = (link: string) =>
