@@ -5,7 +5,9 @@ export async function GET(req: Request) {
   const videoUrl = searchParams.get('url')
   const videoId = new URL(videoUrl || '').searchParams.get('v')
 
-  if (!videoId) return NextResponse.json({ error: 'Invalid URL' }, { status: 400 })
+  if (!videoId) {
+    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 })
+  }
 
   try {
     const res = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
@@ -14,6 +16,7 @@ export async function GET(req: Request) {
         'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com',
       },
     })
+
     const data = await res.json()
 
     return NextResponse.json({
