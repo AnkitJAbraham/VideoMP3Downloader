@@ -44,8 +44,8 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative lg:flex lg:h-screen w-full font-sans overflow-hidden text-black">
-      {/* Left Panel */}
+<main className="relative lg:flex lg:h-screen w-full font-sans overflow-hidden text-black pb-6">
+{/* Left Panel */}
       <div
         className={`fixed top-0 left-0 w-full h-full bg-gray-100 z-30 transition-transform duration-700 pb-36
           flex flex-col justify-center items-center gap-10 p-8
@@ -82,7 +82,7 @@ export default function HomePage() {
         >
           {loading ? "Loading..." : "Get Download Link ->"}
         </button>
-        <footer className="w-full text-center font-semibold bg-gradient-to-r from-teal-300 to-sky-800 text-white text-xs py-1 fixed bottom-0 left-0">
+        <footer className="lg:invisible w-full text-center font-semibold bg-gradient-to-r from-teal-300 to-sky-800 text-white text-xs py-1 fixed bottom-0 left-0">
           &copy; {new Date().getFullYear()}{" "}
           <a
             href="https://www.ankitjohn.com"
@@ -146,7 +146,7 @@ export default function HomePage() {
             )}
           </>
         )}
-        <footer className="w-full text-center font-semibold bg-gradient-to-r from-teal-300 to-sky-800 text-white text-xs py-1 fixed bottom-0 left-0">
+        <footer className="lg:invisible w-full text-center font-semibold bg-gradient-to-r from-teal-300 to-sky-800 text-white text-xs py-1 fixed bottom-0 left-0">
           &copy; {new Date().getFullYear()}{" "}
           <a
             href="https://www.ankitjohn.com"
