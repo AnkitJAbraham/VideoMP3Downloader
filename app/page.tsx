@@ -131,7 +131,7 @@ export default function HomePage() {
                 sizes="256px"
               />
             </div>
-            {info.duration && (
+            {info.title && (
               <button
                 onClick={handleDownload}
                 className="block font-bold bg-gradient-to-r from-teal-300 to-sky-800 text-white px-6 py-3 rounded hover:bg-green-700 transition"
